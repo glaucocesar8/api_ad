@@ -132,7 +132,7 @@ def desbloquear_usuario():
 # Função para gerar uma senha aleatória
 def gerar_senha_aleatoria(tamanho=15):
     caracteres = string.digits
-    senha = 'Construimos' + ''.join(random.choice(caracteres) for _ in range(tamanho - len('Construimos')))
+    senha = 'Novasenha' + ''.join(random.choice(caracteres) for _ in range(tamanho - len('Novasenha')))
     return senha
 
 
