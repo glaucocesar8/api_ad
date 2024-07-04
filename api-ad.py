@@ -144,7 +144,7 @@ def resetar_senha():
     con.search(base_dn, filter_str, attributes='sAMAccountName')
     if con.bind():
         try:
-            con.search(search_base='DC=intra,DC=epgnet,DC=com,DC=br', search_filter=f'(sAMAccountName={login_user})', search_scope=SUBTREE, attributes=['sAMAccountName'])
+            con.search(search_base='DC=contoso,DC=com,DC=br', search_filter=f'(sAMAccountName={login_user})', search_scope=SUBTREE, attributes=['sAMAccountName'])
             if con.entries:
                 user_dn = con.entries[0].entry_dn
                 nova_senha = gerar_senha_aleatoria()  # Gerar a senha aleatória
