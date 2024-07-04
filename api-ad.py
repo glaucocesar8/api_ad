@@ -165,7 +165,7 @@ def definir_expiracao_usuario():
     login = request.json.get('login')
     expiration_date = request.json.get('expiration_date')
     solicitante = request.json.get('mail_solicitante')  # Obtenha o nome do solicitante a partir do corpo da solicitação
-    filter = "OU=Users,OU=TI,OU=Grupo Plaenge,DC=intra,DC=epgnet,DC=com,DC=br"
+    filter = "OU=Users,OU=TI,OU=Grupo Contoso,DC=contoso,DC=com,DC=br"
 
     # Filtro de pesquisa de permissão
     filter_permission = f'(mail={solicitante})'  # Filtro para todos os usuários
