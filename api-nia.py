@@ -20,9 +20,9 @@ def verificar_token_fixo():
     if token != f"Bearer {fixed_access_token}":
         return jsonify({'error': 'Token de acesso inválido'}), 401
 
-server = Server("ldaps://intra.epgnet.com.br", use_ssl=True)
+server = Server("ldaps://contoso.com.br", use_ssl=True)
 con = credenciais.conexao
-base_dn = "DC=intra,DC=epgnet,DC=com,DC=br"
+base_dn = "DC=contoso,DC=com,DC=br"
 
 @app.route('/', methods=['POST'])
 def index():
