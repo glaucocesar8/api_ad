@@ -9,6 +9,7 @@ import string
 
 app = Flask(__name__)
 
+### Verifica o Token para autenticar as APIs ###
 fixed_access_token = credenciais.token_api
 
 @app.before_request
@@ -20,15 +21,20 @@ def verificar_token_fixo():
     if token != f"Bearer {fixed_access_token}":
         return jsonify({'error': 'Token de acesso inválido'}), 401
 
+
+### Conexão com o LDAP ###
 server = Server("ldaps://contoso.com.br", use_ssl=True)
 con = credenciais.conexao
 base_dn = "DC=contoso,DC=com,DC=br"
 
+
+### Verifica se a API está online ###
 @app.route('/', methods=['POST'])
 def index():
 	return 'Sua API está Online!'
 
 
+### Verifica se o usuário existe ###
 @app.route('/api/consultar-existencia-usuario', methods=['POST'])
 def consultar_existencia_usuario():
     login = request.json.get('login')
@@ -52,6 +58,7 @@ def consultar_existencia_usuario():
         return jsonify(response)
 
 
+### Verifica os grupos em que o usuário é membro ###
 @app.route('/api/consultar-grupos-usuario', methods=['POST'])
 def consultar_grupos_usuario():
     login = request.json.get('login')
@@ -73,6 +80,7 @@ def consultar_grupos_usuario():
         return jsonify(response)
 
 
+### Virifica se o usuário está bloqueado ###
 @app.route('/api/verificar-usuario-bloqueado', methods=['POST'])
 def verificar_bloqueio_usuario():
     login = request.json.get('login')
@@ -98,6 +106,7 @@ def verificar_bloqueio_usuario():
             return jsonify({'mensagem': 'Atributo "lockoutTime" não encontrado'}), 500
 
 
+### Desbloqueia o usuário ###
 @app.route('/api/desbloquear-usuario', methods=['POST'])
 def desbloquear_usuario():
     login = request.json.get('login')
@@ -126,6 +135,8 @@ def gerar_senha_aleatoria(tamanho=15):
     senha = 'Construimos' + ''.join(random.choice(caracteres) for _ in range(tamanho - len('Construimos')))
     return senha
 
+
+### Realiza o reset de senha do usuário ###
 @app.route('/api/resetar-senha', methods=['POST'])
 def resetar_senha():
     login_user = request.json.get('login_user')
@@ -148,6 +159,7 @@ def resetar_senha():
         return jsonify({'mensagem': 'Falha na conexão com o LDAP'}), 500
 
 
+### Define uma data e hora para o usuário expirar ###
 @app.route('/api/definir-expiracao-usuario', methods=['POST'])
 def definir_expiracao_usuario():
     login = request.json.get('login')
@@ -255,6 +267,7 @@ def adicionar_usuario_grupo():
 """
 
 
+### Pesquisa se um grupo existe ###
 @app.route('/api/pesquisar-grupo', methods=['POST'])
 def pesquisar_grupo():
     data = request.get_json()  # Captura o JSON da requisição
@@ -285,7 +298,7 @@ def pesquisar_grupo():
     return jsonify({'mensagem': 'Grupo encontrado', 'cn': group_entry.cn.value}), 200
 
 
-# Adiciona usuário em um grupo (Email ou CN passado como parametro)
+### Adiciona usuário em um grupo (Email ou CN passado como parametro) ###
 @app.route('/api/adicionar-usuario-grupo', methods=['POST'])
 def adicionar_usuario_grupo():
     data = request.get_json()  # Captura o JSON da requisição
@@ -340,7 +353,7 @@ def adicionar_usuario_grupo():
         return jsonify({'mensagem': 'Falha ao adicionar usuário ao grupo', 'detalhes': con.result})
 
 
-# Adiciona o usuário em um ou mais grupos
+### Adiciona o usuário em um ou mais grupos ###
 @app.route('/api/adicionar-usuario-grupos', methods=['POST'])
 def adicionar_usuario_grupos():
     data = request.get_json()  # Captura o JSON da requisição
@@ -403,6 +416,7 @@ def adicionar_usuario_grupos():
 
 
 
+### Remove usuário de um grupo ###
 @app.route('/api/remove-usuario-grupo', methods=['POST'])
 def remove_usuario_grupo():
     data = request.get_json()  # Captura o JSON da requisição
@@ -457,7 +471,7 @@ def remove_usuario_grupo():
         return jsonify({'mensagem': 'Falha ao remover usuário do grupo', 'detalhes': con.result})
 
 
-# Remove um ou mais grupos
+### Remove um ou mais grupos ###
 @app.route('/api/remove-usuario-grupos', methods=['POST'])
 def remove_usuario_grupos():
     data = request.get_json()  # Captura o JSON da requisição
